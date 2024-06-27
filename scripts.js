@@ -4,6 +4,18 @@ let playedSongs = [];
 const audioPlayer = document.getElementById('radio-player');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const volumeSlider = document.getElementById('volume-slider');
+const visualizer = document.getElementById('visualizer');
+const gif = document.getElementById('playing-gif');
+
+const canvasCtx = visualizer.getContext('2d');
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const analyser = audioCtx.createAnalyser();
+const source = audioCtx.createMediaElementSource(audioPlayer);
+source.connect(analyser);
+analyser.connect(audioCtx.destination);
+analyser.fftSize = 256;
+const bufferLength = analyser.frequencyBinCount;
+const dataArray = new Uint8Array(bufferLength);
 
 function setMode(mode) {
     currentMode = mode;
@@ -41,10 +53,17 @@ function playRandomSong() {
             console.log('Playback error:', error);
         });
         playPauseBtn.textContent = 'Pause';
+        gif.style.display = 'block';
+        audioCtx.resume().then(() => {
+            drawVisualizer();
+        });
     }
 }
 
-audioPlayer.addEventListener('ended', playRandomSong);
+audioPlayer.addEventListener('ended', () => {
+    gif.style.display = 'none';
+    playRandomSong();
+});
 
 function togglePlayPause() {
     if (audioPlayer.paused) {
@@ -52,9 +71,12 @@ function togglePlayPause() {
             console.log('Playback error:', error);
         });
         playPauseBtn.textContent = 'Pause';
+        gif.style.display = 'block';
+        audioCtx.resume();
     } else {
         audioPlayer.pause();
         playPauseBtn.textContent = 'Play';
+        gif.style.display = 'none';
     }
 }
 
@@ -68,3 +90,25 @@ function setVolume(volume) {
 
 volumeSlider.value = 0.5;
 setVolume(0.5);
+
+function drawVisualizer() {
+    requestAnimationFrame(drawVisualizer);
+    
+    analyser.getByteFrequencyData(dataArray);
+    
+    canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+    canvasCtx.fillRect(0, 0, visualizer.width, visualizer.height);
+    
+    const barWidth = (visualizer.width / bufferLength) * 2.5;
+    let barHeight;
+    let x = 0;
+    
+    for (let i = 0; i < bufferLength; i++) {
+        barHeight = dataArray[i] / 2;
+        
+        canvasCtx.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
+        canvasCtx.fillRect(x, visualizer.height - barHeight / 2, barWidth, barHeight);
+        
+        x += barWidth + 1;
+    }
+}
