@@ -4,6 +4,8 @@ let playedSongs = [];
 const audioPlayer = document.getElementById('radio-player');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const volumeSlider = document.getElementById('volume-slider');
+const progressBar = document.getElementById('progress-bar');
+const currentTimeDisplay = document.getElementById('current-time'); // New line
 const visualizer = document.getElementById('visualizer');
 const gif = document.getElementById('playing-gif');
 
@@ -86,6 +88,27 @@ function skipSong() {
 
 function setVolume(volume) {
     audioPlayer.volume = volume;
+}
+
+function updateProgress() {
+    const duration = audioPlayer.duration;
+    const currentTime = audioPlayer.currentTime;
+    const progress = (currentTime / duration) * 100;
+    progressBar.value = progress;
+
+    // Update current time display in mm:ss format
+    const minutes = Math.floor(currentTime / 60);
+    let seconds = Math.floor(currentTime % 60);
+    if (seconds < 10) {
+        seconds = '0' + seconds; // Add leading zero if seconds < 10
+    }
+    currentTimeDisplay.textContent = `${minutes}:${seconds}`;
+}
+
+function seekTo(value) {
+    const duration = audioPlayer.duration;
+    const seekTime = (value / 100) * duration;
+    audioPlayer.currentTime = seekTime;
 }
 
 volumeSlider.value = 0.5;

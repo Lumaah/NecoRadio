@@ -3,7 +3,10 @@ body {
     text-align: center;
     margin: 0;
     padding: 20px;
-    background-color: #f0f0f0;
+    background-image: url('coolbackground.png'); /* Replace with your image path */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-attachment: fixed; /* Ensures the image stays fixed as the user scrolls */
 }
 
 .mode-selector {

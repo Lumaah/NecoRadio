@@ -18,14 +18,16 @@
         <button onclick="skipSong()">Skip</button>
         <input type="range" id="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)">
     </div>
-    <audio id="radio-player">
+    <audio id="radio-player" ontimeupdate="updateProgress()">
         Your browser does not support the audio element.
     </audio>
+    <input type="range" id="progress-bar" min="0" max="100" value="0" step="1" onchange="seekTo(this.value)">
+    <span id="current-time">0:00</span>
     <canvas id="visualizer"></canvas>
     <img id="playing-gif" src="necodance.gif" alt="Playing GIF" style="display: none;">
     
     <footer>
-        <p>Neco Arc IA Radio &copy; 2024 | Created by Lumaah (1.0)</p>
+        <p>Neco Arc IA Radio &copy; 2024 | Created by Lumaah (1.1)</p>
     </footer>
     
     <script src="scripts.js"></script>
