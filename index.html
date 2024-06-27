@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neco Radio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Neco Radio</h1>
+    <div class="mode-selector">
+        <button onclick="setMode('mode1')">Mode 1</button>
+        <button onclick="setMode('mode2')">Mode 2</button>
+        <button onclick="setMode('mode3')">Mode 3</button>
+    </div>
+    <div class="controls">
+        <button id="play-pause-btn" onclick="togglePlayPause()">Play</button>
+        <button onclick="skipSong()">Skip</button>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)">
+    </div>
+    <audio controls id="radio-player">
+        Your browser does not support the audio element.
+    </audio>
+    <script src="scripts.js"></script>
+</body>
+</html>
